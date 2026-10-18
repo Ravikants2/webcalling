@@ -1,45 +1,36 @@
 # 📡 WebCalling
 
-Private & Secure video calling, voice calling, screen sharing, chat and file transfer for 2 users.
+Private & Secure video calling, voice calling, screen sharing, chat and file transfer.
+**Zero server dependency** — runs 100% on GitHub Pages using PeerJS public cloud.
 
 ## Users
-| Name | Email |
-|---|---|
-| RaviKant Singh | ravikant.s2@gmail.com |
-| Rekha Kumari | rekhasingh@gmail.com |
-
-Password: `Pass@123` (both users)
+| Name | Email | Password |
+|---|---|---|
+| RaviKant Singh | ravikant.s2@gmail.com | Pass@123 |
+| Rekha Kumari | rekhasingh@gmail.com | Pass@123 |
 
 ## Features
 - 🔐 Login with predefined users
-- 🟢 Live online/offline presence indicator
-- 💬 Real-time chat
+- 🟢 Live online/offline presence (auto-detects every 8s)
+- 💬 Real-time P2P chat
 - 📞 Voice call
 - 📹 Video call
 - 🖥️ Screen sharing
-- 📎 P2P file transfer (WebRTC DataChannel)
+- 📎 P2P file transfer
+- **No server. No limits. No cost.**
 
-## Deploy
+## Live App
+**https://ravikants2.github.io/webcalling/**
 
-### 1. Deploy Signaling Server → Railway (free)
-1. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-2. Select this repo
-3. Railway auto-runs `npm start`
-4. Copy your URL e.g. `https://webcalling-server.up.railway.app`
+## How to Enable GitHub Pages
+1. Go to repo → Settings → Pages
+2. Source → **GitHub Actions** → Save
+3. Done — auto-deploys on every push to `main`
 
-### 2. Update SIGNALING_SERVER in index.html
-```js
-const SIGNALING_SERVER = 'https://YOUR-RAILWAY-URL.up.railway.app';
+## Architecture
 ```
-
-### 3. Push to GitHub
-```bash
-git remote add origin https://github.com/Ravikants2/webcalling.git
-git branch -M main
-git push -u origin main
+Browser A ──── PeerJS Cloud (free signaling) ──── Browser B
+         └──────────── WebRTC P2P ───────────────┘
 ```
-
-### 4. Enable GitHub Pages
-Repo → Settings → Pages → Source: **GitHub Actions**
-
-App live at: `https://ravikants2.github.io/webcalling/`
+All media, chat and files go directly peer-to-peer.
+PeerJS cloud only handles the initial handshake (no data stored).
