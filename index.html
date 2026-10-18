@@ -2,125 +2,162 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>WebCalling</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:#0d0d1a;color:#e0e0e0;min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Segoe UI',sans-serif;background:#0d0d1a;color:#e0e0e0;height:100dvh;overflow:hidden}
 
-#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
-.login-card{background:linear-gradient(145deg,#13132e,#1a1a3a);border:1px solid #2a2a5a;border-radius:20px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
-.login-logo{text-align:center;margin-bottom:28px}
-.login-logo .icon{font-size:3rem;display:block;margin-bottom:8px}
-.login-logo h1{font-size:1.8rem;background:linear-gradient(135deg,#7c6af7,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
-.login-logo p{color:#666;font-size:0.85rem;margin-top:4px}
-.user-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
-.user-card{background:#0f0f25;border:2px solid #2a2a4a;border-radius:14px;padding:16px 18px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px}
-.user-card:hover{border-color:#7c6af7;background:#14143a;transform:translateY(-1px)}
+/* ── LOGIN ── */
+#login-screen{display:flex;align-items:center;justify-content:center;height:100dvh;padding:16px;overflow-y:auto}
+.login-card{background:linear-gradient(145deg,#13132e,#1a1a3a);border:1px solid #2a2a5a;border-radius:20px;padding:32px 24px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo .icon{font-size:2.6rem;display:block;margin-bottom:6px}
+.login-logo h1{font-size:1.7rem;background:linear-gradient(135deg,#7c6af7,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.login-logo p{color:#555;font-size:0.82rem;margin-top:3px}
+.user-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.user-card{background:#0f0f25;border:2px solid #2a2a4a;border-radius:14px;padding:14px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px;min-height:64px}
+.user-card:active{transform:scale(0.98)}
 .user-card.selected{border-color:#7c6af7;background:#1a1a45;box-shadow:0 0 0 3px rgba(124,106,247,0.2)}
-.avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0}
+.avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;flex-shrink:0}
 .av-r{background:linear-gradient(135deg,#7c6af7,#5b4de0)}
 .av-k{background:linear-gradient(135deg,#f76ca8,#e04d8a)}
-.user-info h3{font-size:0.95rem;font-weight:600;color:#e0e0e0}
-.user-info p{font-size:0.78rem;color:#888;margin-top:2px}
-.check{margin-left:auto;color:#7c6af7;font-size:1.2rem;opacity:0}
+.user-info h3{font-size:0.92rem;font-weight:600;color:#e0e0e0}
+.user-info p{font-size:0.75rem;color:#777;margin-top:2px}
+.check{margin-left:auto;color:#7c6af7;font-size:1.1rem;opacity:0;flex-shrink:0}
 .user-card.selected .check{opacity:1}
-.pw-row{position:relative;margin-bottom:20px}
-.pw-row label{display:block;font-size:0.8rem;color:#888;margin-bottom:6px}
-.pw-row input{width:100%;padding:12px 44px 12px 16px;background:#0f0f25;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:0.95rem;outline:none;transition:border 0.2s}
+.pw-row{position:relative;margin-bottom:18px}
+.pw-row label{display:block;font-size:0.78rem;color:#777;margin-bottom:5px}
+.pw-row input{width:100%;padding:12px 44px 12px 14px;background:#0f0f25;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:1rem;outline:none;transition:border 0.2s}
 .pw-row input:focus{border-color:#7c6af7}
-.pw-toggle{position:absolute;right:12px;top:36px;cursor:pointer;color:#666;font-size:1rem}
-.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,#7c6af7,#5b4de0);border:none;border-radius:10px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity 0.2s}
-.btn-login:hover{opacity:0.9}
-.login-err{color:#f87171;font-size:0.82rem;text-align:center;margin-top:10px;min-height:18px}
+.pw-toggle{position:absolute;right:12px;top:34px;cursor:pointer;color:#555;font-size:1rem;padding:4px}
+.btn-login{width:100%;padding:14px;background:linear-gradient(135deg,#7c6af7,#5b4de0);border:none;border-radius:10px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer}
+.login-err{color:#f87171;font-size:0.8rem;text-align:center;margin-top:8px;min-height:16px}
 
-#app{display:none;height:100vh;flex-direction:column}
-.topbar{background:#13132e;border-bottom:1px solid #1e1e40;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.topbar-logo{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#7c6af7,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.topbar-left{display:flex;align-items:center;gap:10px}
-.topbar-right{display:flex;align-items:center;gap:10px}
-.my-badge{display:flex;align-items:center;gap:8px;background:#0f0f25;border:1px solid #2a2a4a;border-radius:30px;padding:5px 12px 5px 6px}
-.av-sm{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700}
-.my-badge span{font-size:0.82rem;color:#ccc}
-.conn-badge{font-size:0.75rem;padding:4px 10px;border-radius:20px;background:#0f2a0f;border:1px solid #166534;color:#4ade80}
+/* ── APP SHELL ── */
+#app{display:none;height:100dvh;flex-direction:column}
+
+/* topbar */
+.topbar{background:#13132e;border-bottom:1px solid #1e1e40;padding:0 14px;height:54px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px}
+.topbar-left{display:flex;align-items:center;gap:8px;min-width:0}
+.topbar-logo{font-size:1rem;font-weight:700;background:linear-gradient(135deg,#7c6af7,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.conn-badge{font-size:0.7rem;padding:3px 8px;border-radius:20px;background:#0f2a0f;border:1px solid #166534;color:#4ade80;white-space:nowrap;flex-shrink:0}
 .conn-badge.off{background:#1a0f0f;border-color:#7f1d1d;color:#f87171}
-.btn-logout{background:none;border:1px solid #2a2a4a;color:#888;padding:5px 12px;border-radius:20px;cursor:pointer;font-size:0.8rem}
-.btn-logout:hover{border-color:#f87171;color:#f87171}
+.topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.my-badge{display:flex;align-items:center;gap:6px;background:#0f0f25;border:1px solid #2a2a4a;border-radius:30px;padding:4px 10px 4px 5px}
+.av-sm{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;flex-shrink:0}
+.my-badge span{font-size:0.78rem;color:#ccc;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-logout{background:none;border:1px solid #2a2a4a;color:#777;padding:5px 10px;border-radius:20px;cursor:pointer;font-size:0.75rem;white-space:nowrap}
 
-.main{display:flex;flex:1;overflow:hidden}
-.sidebar{width:300px;background:#0f0f22;border-right:1px solid #1e1e40;display:flex;flex-direction:column;flex-shrink:0}
-.sidebar-section{padding:14px;border-bottom:1px solid #1e1e40}
-.sidebar-section h3{font-size:0.72rem;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:10px}
+/* ── MOBILE TAB LAYOUT ── */
+.main{flex:1;overflow:hidden;position:relative}
 
-.peer-card{background:#13132e;border:1px solid #1e1e40;border-radius:14px;padding:14px;transition:all 0.3s}
-.peer-card.online{border-color:#22c55e;box-shadow:0 0 14px rgba(34,197,94,0.12)}
+/* panels — full screen on mobile, side-by-side on desktop */
+.panel{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform 0.3s ease;background:#0d0d1a}
+.panel-chat{transform:translateX(0)}
+.panel-video{transform:translateX(100%)}
+.panel-chat.hide{transform:translateX(-100%)}
+.panel-video.show{transform:translateX(0)}
+
+/* tab bar (mobile) */
+.tab-bar{display:flex;background:#13132e;border-top:1px solid #1e1e40;flex-shrink:0}
+.tab-btn{flex:1;padding:10px 4px 8px;border:none;background:none;color:#555;font-size:0.7rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.2s}
+.tab-btn .tico{font-size:1.3rem}
+.tab-btn.active{color:#7c6af7}
+.tab-btn.active .tico{filter:drop-shadow(0 0 4px #7c6af7)}
+
+/* ── CHAT PANEL ── */
+.sidebar-inner{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.contact-section{padding:12px;border-bottom:1px solid #1e1e40;flex-shrink:0}
+.contact-section h3{font-size:0.68rem;text-transform:uppercase;letter-spacing:1.5px;color:#444;margin-bottom:8px}
+.peer-card{background:#13132e;border:1px solid #1e1e40;border-radius:12px;padding:12px;transition:all 0.3s}
+.peer-card.online{border-color:#22c55e;box-shadow:0 0 12px rgba(34,197,94,0.12)}
 .peer-top{display:flex;align-items:center;gap:10px}
-.peer-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;flex-shrink:0;position:relative}
-.sdot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;border-radius:50%;border:2px solid #0f0f22;background:#333;transition:background 0.3s}
+.peer-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:700;flex-shrink:0;position:relative}
+.sdot{position:absolute;bottom:1px;right:1px;width:10px;height:10px;border-radius:50%;border:2px solid #13132e;background:#333;transition:background 0.3s}
 .sdot.on{background:#22c55e}
-.peer-name{font-size:0.9rem;font-weight:600}
-.peer-email{font-size:0.74rem;color:#666;margin-top:1px}
-.peer-label{font-size:0.74rem;margin-top:8px;padding:3px 8px;border-radius:6px;display:inline-block}
+.peer-name{font-size:0.88rem;font-weight:600}
+.peer-email{font-size:0.72rem;color:#555;margin-top:1px}
+.peer-label{font-size:0.72rem;margin-top:6px;padding:3px 8px;border-radius:6px;display:inline-block}
 .peer-label.online{background:rgba(34,197,94,0.1);color:#22c55e}
 .peer-label.offline{background:rgba(80,80,80,0.1);color:#555}
 
-.btn-connect{width:100%;padding:11px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:10px;color:#fff;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.connect-section{padding:10px 12px;border-bottom:1px solid #1e1e40;flex-shrink:0}
+.btn-connect{width:100%;padding:11px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:10px;color:#fff;font-size:0.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .btn-connect:disabled{background:#1a1a30;color:#444;cursor:not-allowed}
-.btn-connect:not(:disabled):hover{opacity:0.9}
 
-.call-actions{display:flex;gap:8px;padding:14px;border-bottom:1px solid #1e1e40}
-.btn-act{flex:1;padding:10px 4px;border:none;border-radius:10px;cursor:pointer;font-size:0.75rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s}
-.btn-act .ico{font-size:1.3rem}
+.call-actions{display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid #1e1e40;flex-shrink:0}
+.btn-act{flex:1;padding:10px 4px;border:none;border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all 0.2s;min-height:56px}
+.btn-act .ico{font-size:1.25rem}
 .btn-act:disabled{opacity:0.25;cursor:not-allowed}
-.bv{background:#1a1a35;color:#a78bfa}.bv:not(:disabled):hover{background:#7c6af7;color:#fff}
-.bvid{background:#1a1a35;color:#60a5fa}.bvid:not(:disabled):hover{background:#2563eb;color:#fff}
-.bsc{background:#1a1a35;color:#34d399}.bsc:not(:disabled):hover{background:#059669;color:#fff}
+.bv{background:#1a1a35;color:#a78bfa}.bv:not(:disabled):active{background:#7c6af7;color:#fff}
+.bvid{background:#1a1a35;color:#60a5fa}.bvid:not(:disabled):active{background:#2563eb;color:#fff}
+.bsc{background:#1a1a35;color:#34d399}.bsc:not(:disabled):active{background:#059669;color:#fff}
 
 .chat-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
-.msg{max-width:88%;padding:9px 13px;border-radius:14px;font-size:0.87rem;word-break:break-word;line-height:1.45}
+.messages{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:7px}
+.msg{max-width:85%;padding:8px 12px;border-radius:14px;font-size:0.86rem;word-break:break-word;line-height:1.45}
 .msg.me{background:linear-gradient(135deg,#7c6af7,#5b4de0);align-self:flex-end;border-bottom-right-radius:3px}
 .msg.them{background:#1a1a35;border:1px solid #2a2a4a;align-self:flex-start;border-bottom-left-radius:3px}
-.msg .meta{font-size:0.68rem;opacity:0.55;margin-top:4px}
+.msg .meta{font-size:0.66rem;opacity:0.55;margin-top:3px}
 .msg.fmsg{background:#0f2a1a;border:1px solid #166534}
 .msg.fmsg a{color:#4ade80;text-decoration:none}
-.chat-input{padding:10px 12px;border-top:1px solid #1e1e40;display:flex;gap:8px;align-items:center}
-.chat-input input{flex:1;padding:10px 14px;background:#13132e;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:0.88rem;outline:none}
+.chat-input{padding:8px 10px;border-top:1px solid #1e1e40;display:flex;gap:6px;align-items:center;flex-shrink:0}
+.chat-input input{flex:1;padding:10px 12px;background:#13132e;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:0.88rem;outline:none}
 .chat-input input:focus{border-color:#7c6af7}
-.btn-send{background:#7c6af7;border:none;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:1rem}
+.btn-send{background:#7c6af7;border:none;color:#fff;padding:10px 13px;border-radius:10px;cursor:pointer;font-size:1rem;flex-shrink:0}
 .btn-send:disabled{background:#1a1a30;color:#444;cursor:not-allowed}
-.btn-file{background:#1a1a30;border:none;color:#666;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:1rem}
-.btn-file:hover{color:#a78bfa}
+.btn-file{background:#1a1a30;border:none;color:#666;padding:10px 11px;border-radius:10px;cursor:pointer;font-size:1rem;flex-shrink:0}
 
-.video-panel{flex:1;background:#07070f;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.video-idle{text-align:center;pointer-events:none}
-.video-idle .big{font-size:5rem;opacity:0.15;display:block;margin-bottom:12px}
-.video-idle p{color:#2a2a4a;font-size:0.9rem}
+/* ── VIDEO PANEL ── */
+.video-inner{flex:1;position:relative;background:#07070f;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.video-idle{text-align:center;pointer-events:none;padding:20px}
+.video-idle .big{font-size:4rem;opacity:0.12;display:block;margin-bottom:10px}
+.video-idle p{color:#2a2a4a;font-size:0.88rem}
 #remote-video{width:100%;height:100%;object-fit:cover;display:none}
-#local-video{position:absolute;bottom:80px;right:16px;width:180px;height:130px;border-radius:12px;object-fit:cover;border:2px solid #7c6af7;display:none;background:#111}
-.call-bar{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,0.85));display:none;justify-content:center;gap:14px}
+#local-video{position:absolute;bottom:80px;right:12px;width:110px;height:80px;border-radius:10px;object-fit:cover;border:2px solid #7c6af7;display:none;background:#111}
+@media(min-width:600px){#local-video{width:160px;height:120px}}
+.call-bar{position:absolute;bottom:0;left:0;right:0;padding:14px 20px;background:linear-gradient(transparent,rgba(0,0,0,0.88));display:none;justify-content:center;gap:16px;align-items:center}
 .call-bar.show{display:flex}
-.cob{width:50px;height:50px;border-radius:50%;border:none;cursor:pointer;font-size:1.2rem;transition:transform 0.15s}
-.cob:hover{transform:scale(1.1)}
+.cob{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:1.2rem;transition:transform 0.15s;display:flex;align-items:center;justify-content:center}
+.cob:active{transform:scale(0.92)}
 .cob-mute{background:#1e1e40;color:#fff}
 .cob-mute.on{background:#f59e0b}
 .cob-cam{background:#1e1e40;color:#fff}
 .cob-cam.off{background:#f59e0b}
 .cob-end{background:#ef4444;color:#fff}
+.call-status{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.6);border:1px solid #22c55e;color:#22c55e;padding:4px 14px;border-radius:20px;font-size:0.75rem;display:none;white-space:nowrap}
+.call-status.show{display:block}
 
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(6px)}
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(6px);padding:16px}
 .modal-bg.show{display:flex}
-.modal{background:#13132e;border:1px solid #2a2a5a;border-radius:20px;padding:32px;text-align:center;width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
-.modal .ring{font-size:3rem;margin-bottom:12px;display:block;animation:ring 0.8s infinite}
+.modal{background:#13132e;border:1px solid #2a2a5a;border-radius:20px;padding:28px 24px;text-align:center;width:100%;max-width:300px}
+.modal .ring{font-size:2.8rem;margin-bottom:10px;display:block;animation:ring 0.8s infinite}
 @keyframes ring{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(12deg)}}
-.modal h3{font-size:1.1rem;margin-bottom:6px}
-.modal p{color:#777;font-size:0.85rem;margin-bottom:24px}
-.modal-btns{display:flex;gap:12px;justify-content:center}
-.btn-acc{background:#22c55e;color:#fff;border:none;padding:12px 28px;border-radius:10px;cursor:pointer;font-weight:600}
-.btn-dec{background:#ef4444;color:#fff;border:none;padding:12px 28px;border-radius:10px;cursor:pointer;font-weight:600}
+.modal h3{font-size:1rem;margin-bottom:5px}
+.modal p{color:#666;font-size:0.82rem;margin-bottom:20px}
+.modal-btns{display:flex;gap:10px;justify-content:center}
+.btn-acc{background:#22c55e;color:#fff;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.9rem}
+.btn-dec{background:#ef4444;color:#fff;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-weight:600;font-size:0.9rem}
 
-.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1e1e40;border:1px solid #7c6af7;color:#a78bfa;padding:8px 20px;border-radius:20px;font-size:0.82rem;display:none;z-index:400;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
-::-webkit-scrollbar{width:4px}
+/* ── TOAST ── */
+.toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#1e1e40;border:1px solid #7c6af7;color:#a78bfa;padding:7px 18px;border-radius:20px;font-size:0.8rem;display:none;z-index:400;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+
+/* ── DESKTOP: side by side ── */
+@media(min-width:768px){
+  .main{display:flex;flex-direction:row}
+  .panel{position:relative;transform:none!important;flex-shrink:0}
+  .panel-chat{width:300px;border-right:1px solid #1e1e40}
+  .panel-video{flex:1;transform:none}
+  .tab-bar{display:none}
+  .call-actions .bsc{display:flex}
+}
+@media(max-width:767px){
+  .bsc{display:none}
+}
+
+::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-thumb{background:#2a2a4a;border-radius:4px}
 </style>
 </head>
@@ -165,81 +202,105 @@ body{font-family:'Segoe UI',sans-serif;background:#0d0d1a;color:#e0e0e0;min-heig
 
 <!-- APP -->
 <div id="app">
+  <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-left">
-      <span style="font-size:1.4rem">📡</span>
+      <span style="font-size:1.3rem;flex-shrink:0">📡</span>
       <span class="topbar-logo">WebCalling</span>
-      <span class="conn-badge off" id="conn-badge">● Connecting...</span>
+      <span class="conn-badge off" id="conn-badge">● …</span>
     </div>
     <div class="topbar-right">
       <div class="my-badge">
         <div class="av-sm" id="my-av"></div>
         <span id="my-name-badge"></span>
       </div>
-      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+      <button class="btn-logout" onclick="doLogout()">Out</button>
     </div>
   </div>
 
-  <div class="main">
-    <div class="sidebar">
-      <div class="sidebar-section">
-        <h3>Contact</h3>
-        <div class="peer-card" id="peer-card">
-          <div class="peer-top">
-            <div class="peer-avatar" id="peer-av">
-              <div class="sdot" id="peer-dot"></div>
+  <!-- Main panels -->
+  <div class="main" id="main">
+
+    <!-- CHAT PANEL -->
+    <div class="panel panel-chat" id="panel-chat">
+      <div class="sidebar-inner">
+
+        <div class="contact-section">
+          <h3>Contact</h3>
+          <div class="peer-card" id="peer-card">
+            <div class="peer-top">
+              <div class="peer-avatar" id="peer-av">
+                <div class="sdot" id="peer-dot"></div>
+              </div>
+              <div>
+                <div class="peer-name" id="peer-name">—</div>
+                <div class="peer-email" id="peer-email"></div>
+              </div>
             </div>
-            <div>
-              <div class="peer-name" id="peer-name">—</div>
-              <div class="peer-email" id="peer-email"></div>
-            </div>
+            <span class="peer-label offline" id="peer-label">⚫ Offline</span>
           </div>
-          <span class="peer-label offline" id="peer-label">⚫ Offline</span>
         </div>
-      </div>
 
-      <div class="sidebar-section">
-        <button class="btn-connect" id="btn-connect" disabled onclick="doConnect()">
-          🔗 Connect
-        </button>
-      </div>
+        <div class="connect-section">
+          <button class="btn-connect" id="btn-connect" disabled onclick="doConnect()">🔗 Connect</button>
+        </div>
 
-      <div class="call-actions">
-        <button class="btn-act bv" id="btn-voice" disabled onclick="startCall('audio')">
-          <span class="ico">📞</span>Voice
-        </button>
-        <button class="btn-act bvid" id="btn-video" disabled onclick="startCall('video')">
-          <span class="ico">📹</span>Video
-        </button>
-        <button class="btn-act bsc" id="btn-screen" disabled onclick="shareScreen()">
-          <span class="ico">🖥️</span>Screen
-        </button>
-      </div>
+        <div class="call-actions">
+          <button class="btn-act bv" id="btn-voice" disabled onclick="startCall('audio')">
+            <span class="ico">📞</span>Voice
+          </button>
+          <button class="btn-act bvid" id="btn-video" disabled onclick="startCall('video')">
+            <span class="ico">📹</span>Video
+          </button>
+          <button class="btn-act bsc" id="btn-screen" disabled onclick="shareScreen()">
+            <span class="ico">🖥️</span>Screen
+          </button>
+        </div>
 
-      <div class="chat-wrap">
-        <div class="messages" id="messages"></div>
-        <div class="chat-input">
-          <input type="file" id="file-input" style="display:none" onchange="sendFile(this)"/>
-          <button class="btn-file" onclick="document.getElementById('file-input').click()">📎</button>
-          <input id="msg-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()"/>
-          <button class="btn-send" id="btn-send" disabled onclick="sendChat()">➤</button>
+        <div class="chat-wrap">
+          <div class="messages" id="messages"></div>
+          <div class="chat-input">
+            <input type="file" id="file-input" style="display:none" onchange="sendFile(this)"/>
+            <button class="btn-file" onclick="document.getElementById('file-input').click()">📎</button>
+            <input id="msg-input" placeholder="Message…" onkeydown="if(event.key==='Enter')sendChat()"/>
+            <button class="btn-send" id="btn-send" disabled onclick="sendChat()">➤</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIDEO PANEL -->
+    <div class="panel panel-video" id="panel-video">
+      <div class="video-inner">
+        <div class="video-idle" id="video-idle">
+          <span class="big">📡</span>
+          <p>Connect to start a call</p>
+        </div>
+        <video id="remote-video" autoplay playsinline></video>
+        <video id="local-video" autoplay playsinline muted></video>
+        <div class="call-status" id="call-status">🔴 On call</div>
+        <div class="call-bar" id="call-bar">
+          <button class="cob cob-mute" id="cob-mute" onclick="toggleMute()">🎤</button>
+          <button class="cob cob-cam" id="cob-cam" onclick="toggleCam()">📷</button>
+          <button class="cob cob-end" onclick="endCall()">📵</button>
         </div>
       </div>
     </div>
 
-    <div class="video-panel">
-      <div class="video-idle" id="video-idle">
-        <span class="big">📡</span>
-        <p>Connect to start a call</p>
-      </div>
-      <video id="remote-video" autoplay playsinline></video>
-      <video id="local-video" autoplay playsinline muted></video>
-      <div class="call-bar" id="call-bar">
-        <button class="cob cob-mute" id="cob-mute" onclick="toggleMute()">🎤</button>
-        <button class="cob cob-cam" id="cob-cam" onclick="toggleCam()">📷</button>
-        <button class="cob cob-end" onclick="endCall()">📵</button>
-      </div>
-    </div>
+  </div>
+
+  <!-- Mobile tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-chat" onclick="showTab('chat')">
+      <span class="tico">💬</span>Chat
+    </button>
+    <button class="tab-btn" id="tab-call" onclick="showTab('call')">
+      <span class="tico">📞</span>Call
+    </button>
+    <button class="tab-btn" id="tab-video" onclick="startCall('video');showTab('call')">
+      <span class="tico">📹</span>Video
+    </button>
   </div>
 </div>
 
@@ -258,36 +319,31 @@ body{font-family:'Segoe UI',sans-serif;background:#0d0d1a;color:#e0e0e0;min-heig
 
 <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
-// ── USERS (fixed peer IDs so they always find each other) ─────
 const USERS = {
-  ravi:  { name:'RaviKant Singh', email:'ravikant.s2@gmail.com',  initials:'RS', color:'linear-gradient(135deg,#7c6af7,#5b4de0)', peerId:'webcalling-ravi'  },
-  rekha: { name:'Rekha Kumari',   email:'rekhasingh@gmail.com',   initials:'RK', color:'linear-gradient(135deg,#f76ca8,#e04d8a)', peerId:'webcalling-rekha' }
+  ravi:  { name:'RaviKant Singh', email:'ravikant.s2@gmail.com',  initials:'RS', color:'linear-gradient(135deg,#7c6af7,#5b4de0)', peerId:'wc-ravi-2024'  },
+  rekha: { name:'Rekha Kumari',   email:'rekhasingh@gmail.com',   initials:'RK', color:'linear-gradient(135deg,#f76ca8,#e04d8a)', peerId:'wc-rekha-2024' }
 };
 const PASSWORD = 'Pass@123';
 
-// ── STATE ─────────────────────────────────────────────────────
 let me = null, peerKey = null;
 let peer = null, conn = null, activeCall = null;
 let localStream = null;
 let micOn = true, camOn = true;
-let pendingCall = null;
+let pendingCall = null, pendingCallType = null;
 let presenceTimer = null;
-
-// ── LOGIN ─────────────────────────────────────────────────────
 let selectedUser = null;
 
+/* ── LOGIN ── */
 function selectUser(k) {
   selectedUser = k;
   document.querySelectorAll('.user-card').forEach(c => c.classList.remove('selected'));
   document.getElementById('card-' + k).classList.add('selected');
   document.getElementById('login-err').textContent = '';
 }
-
 function togglePw() {
   const i = document.getElementById('pw-input');
   i.type = i.type === 'password' ? 'text' : 'password';
 }
-
 function doLogin() {
   if (!selectedUser) { setErr('Select a user first.'); return; }
   if (document.getElementById('pw-input').value !== PASSWORD) { setErr('Incorrect password.'); return; }
@@ -296,9 +352,7 @@ function doLogin() {
   renderApp();
   initPeer();
 }
-
 function setErr(m) { document.getElementById('login-err').textContent = m; }
-
 function doLogout() {
   clearInterval(presenceTimer);
   if (activeCall) activeCall.close();
@@ -312,12 +366,11 @@ function doLogout() {
   document.querySelectorAll('.user-card').forEach(c => c.classList.remove('selected'));
   selectedUser = null;
 }
-
 function renderApp() {
   const p = USERS[peerKey];
   document.getElementById('my-av').textContent = me.initials;
   document.getElementById('my-av').style.background = me.color;
-  document.getElementById('my-name-badge').textContent = me.name;
+  document.getElementById('my-name-badge').textContent = me.name.split(' ')[0];
   const pav = document.getElementById('peer-av');
   pav.style.background = p.color;
   pav.innerHTML = p.initials + '<div class="sdot" id="peer-dot"></div>';
@@ -329,10 +382,23 @@ function renderApp() {
   document.getElementById('app').style.display = 'flex';
 }
 
-// ── PEERJS INIT ───────────────────────────────────────────────
+/* ── MOBILE TABS ── */
+function showTab(tab) {
+  const chat = document.getElementById('panel-chat');
+  const video = document.getElementById('panel-video');
+  document.getElementById('tab-chat').classList.toggle('active', tab === 'chat');
+  document.getElementById('tab-call').classList.toggle('active', tab === 'call');
+  document.getElementById('tab-video').classList.toggle('active', tab === 'video');
+  if (tab === 'chat') {
+    chat.classList.remove('hide'); video.classList.remove('show');
+  } else {
+    chat.classList.add('hide'); video.classList.add('show');
+  }
+}
+
+/* ── PEERJS INIT ── */
 function initPeer() {
-  setConnBadge(false, 'Connecting...');
-  // Use PeerJS public cloud — free, no limits, no server needed
+  setConnBadge(false, '…');
   peer = new Peer(me.peerId, {
     host: '0.peerjs.com', port: 443, path: '/', secure: true,
     config: { iceServers: [
@@ -341,192 +407,216 @@ function initPeer() {
       { urls: 'stun:stun.cloudflare.com:3478' }
     ]}
   });
-
-  peer.on('open', id => {
+  peer.on('open', () => {
     setConnBadge(true, 'Ready');
     toast('Signed in as ' + me.name);
     pingPeer();
     presenceTimer = setInterval(pingPeer, 8000);
   });
-
   peer.on('error', err => {
-    // If ID taken (other tab), retry with timestamp suffix
     if (err.type === 'unavailable-id') {
       peer.destroy();
       peer = new Peer(me.peerId + '-' + Date.now(), {
-        host: '0.peerjs.com', port: 443, path: '/', secure: true
+        host: '0.peerjs.com', port: 443, path: '/', secure: true,
+        config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
       });
       peer.on('open', () => { setConnBadge(true, 'Ready'); pingPeer(); presenceTimer = setInterval(pingPeer, 8000); });
       peer.on('connection', onIncomingConn);
       peer.on('call', onIncomingCall);
     } else {
-      setConnBadge(false, 'Error');
-      toast('Connection error: ' + err.type);
+      setConnBadge(false, 'Err');
+      toast('Error: ' + err.type);
     }
   });
-
-  // Incoming data connection (chat / file / signals)
   peer.on('connection', onIncomingConn);
-
-  // Incoming media call
   peer.on('call', onIncomingCall);
 }
 
-// ── PRESENCE PING ─────────────────────────────────────────────
+/* ── PRESENCE ── */
 function pingPeer() {
-  const c = peer.connect(USERS[peerKey].peerId, { reliable: true, label: 'ping' });
-  c.on('open', () => {
-    c.send(JSON.stringify({ type: 'ping', name: me.name }));
-    setPeerOnline(true);
-    c.close();
-  });
+  const c = peer.connect(USERS[peerKey].peerId, { reliable: false, label: 'ping' });
+  c.on('open', () => { c.send('ping'); setPeerOnline(true); setTimeout(() => c.close(), 500); });
   c.on('error', () => setPeerOnline(false));
 }
 
-// ── DATA CONNECTION ───────────────────────────────────────────
+/* ── DATA CONNECTION ── */
 function onIncomingConn(c) {
   if (c.label === 'ping') {
-    c.on('data', d => {
-      try {
-        const msg = JSON.parse(d);
-        if (msg.type === 'ping') setPeerOnline(true);
-      } catch(e) {}
-    });
+    c.on('data', () => setPeerOnline(true));
     return;
   }
+  // Accept incoming connect from peer
   conn = c;
   setupConn(conn);
+  setCallEnabled(true);
+  toast(USERS[peerKey].name + ' connected ✅');
 }
 
 function setupConn(c) {
   c.on('data', d => {
-    if (typeof d === 'string') {
-      const msg = JSON.parse(d);
-      if (msg.type === 'chat') appendMsg(msg.text, 'them', msg.ts);
-      else if (msg.type === 'call-req') showCallModal(msg.callType, msg.name);
-      else if (msg.type === 'call-acc') startMediaAndCall(pendingCallType);
-      else if (msg.type === 'call-rej') { pendingCallType = null; toast('Call declined ❌'); }
-      else if (msg.type === 'call-end') { endCall(); toast('Call ended'); }
-      else if (msg.type === 'file-start') { window._fmeta = msg; window._fchunks = []; }
-      else if (msg.type === 'file-end') {
-        const blob = new Blob(window._fchunks, { type: window._fmeta.mime });
-        appendFileMsg(window._fmeta.name, URL.createObjectURL(blob), 'them');
-      }
-    } else {
-      if (window._fchunks) window._fchunks.push(d);
+    if (typeof d !== 'string') { if (window._fchunks) window._fchunks.push(d); return; }
+    const msg = JSON.parse(d);
+    if (msg.type === 'chat')       appendMsg(msg.text, 'them', msg.ts);
+    else if (msg.type === 'call-req')  showCallModal(msg.callType, msg.name);
+    else if (msg.type === 'call-acc')  startMediaAndCall(pendingCallType);
+    else if (msg.type === 'call-rej')  { pendingCallType = null; toast('Call declined ❌'); }
+    else if (msg.type === 'call-end')  { endCall(false); toast('Call ended'); }
+    else if (msg.type === 'file-start'){ window._fmeta = msg; window._fchunks = []; }
+    else if (msg.type === 'file-end') {
+      const blob = new Blob(window._fchunks, { type: window._fmeta.mime });
+      appendFileMsg(window._fmeta.name, URL.createObjectURL(blob), 'them');
     }
   });
-  c.on('close', () => { conn = null; setCallEnabled(false); });
+  c.on('close', () => { conn = null; setCallEnabled(false); toast('Peer disconnected'); });
 }
 
-// ── CONNECT ───────────────────────────────────────────────────
+/* ── CONNECT ── */
 function doConnect() {
   if (!peer || !peer.open) return toast('Not ready yet');
   conn = peer.connect(USERS[peerKey].peerId, { reliable: true });
-  conn.on('open', () => {
-    setupConn(conn);
-    setCallEnabled(true);
-    toast('Connected to ' + USERS[peerKey].name + ' ✅');
-  });
-  conn.on('error', () => toast('Could not connect — peer may be offline'));
+  conn.on('open', () => { setupConn(conn); setCallEnabled(true); toast('Connected ✅'); });
+  conn.on('error', () => toast('Peer offline'));
 }
+</script>
 
-// ── CALLS ─────────────────────────────────────────────────────
-let pendingCallType = null;
+<script>
+/* ── CALLS (two-way audio) ──────────────────────────────────────
+   Flow:
+   Caller  → sends call-req over data channel
+   Callee  → shows modal, on Accept: gets local stream, answers PeerJS call
+   Caller  → on call-acc: gets local stream, makes PeerJS call to callee
+   Both    → peer.on('call') fires on callee; caller gets stream via activeCall.on('stream')
+   Result  → full duplex audio/video both ways
+----------------------------------------------------------------*/
 
 function startCall(type) {
   if (!conn || !conn.open) return toast('Connect first');
   pendingCallType = type;
   conn.send(JSON.stringify({ type: 'call-req', callType: type, name: me.name }));
-  toast('Calling ' + USERS[peerKey].name + '...');
+  toast('Calling ' + USERS[peerKey].name + '…');
+  showTab('call');
 }
 
 function showCallModal(type, name) {
   pendingCall = { type };
   document.getElementById('modal-icon').textContent = type === 'video' ? '📹' : '📞';
   document.getElementById('modal-title').textContent = 'Incoming ' + (type === 'video' ? 'Video' : 'Voice') + ' Call';
-  document.getElementById('modal-desc').textContent = name + ' is calling you...';
+  document.getElementById('modal-desc').textContent = name + ' is calling you…';
   document.getElementById('call-modal').classList.add('show');
 }
 
 function acceptCall() {
   document.getElementById('call-modal').classList.remove('show');
   conn.send(JSON.stringify({ type: 'call-acc' }));
-  startMediaAndCall(pendingCall.type);
+  // Callee gets media then waits for PeerJS call from caller
+  const type = pendingCall.type;
   pendingCall = null;
+  navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' })
+    .then(stream => {
+      localStream = stream;
+      showLocalVideo(stream);
+      // peer.on('call') will fire when caller calls us — answer it there
+      // Store stream so onIncomingCall can use it
+      window._pendingAnswerStream = stream;
+    })
+    .catch(err => toast('Mic/camera error: ' + err.message));
 }
 
 function rejectCall() {
   document.getElementById('call-modal').classList.remove('show');
-  conn.send(JSON.stringify({ type: 'call-rej' }));
+  if (conn && conn.open) conn.send(JSON.stringify({ type: 'call-rej' }));
   pendingCall = null;
 }
 
+// Called on caller side after callee accepts
 async function startMediaAndCall(type) {
   try {
     localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: type === 'video' });
-    document.getElementById('local-video').srcObject = localStream;
-    document.getElementById('local-video').style.display = 'block';
-    // Make PeerJS media call
+    showLocalVideo(localStream);
+    // Caller makes the PeerJS media call — callee will answer in onIncomingCall
     activeCall = peer.call(USERS[peerKey].peerId, localStream);
-    activeCall.on('stream', remoteStream => showRemote(remoteStream));
-    activeCall.on('close', endCall);
-    document.getElementById('call-bar').classList.add('show');
-    document.getElementById('video-idle').style.display = 'none';
+    activeCall.on('stream', stream => showRemoteStream(stream));
+    activeCall.on('close', () => endCall(false));
+    showCallUI();
   } catch(err) {
-    toast('Media error: ' + err.message);
+    toast('Mic/camera error: ' + err.message);
   }
 }
 
+// Fires on callee when caller makes peer.call()
 function onIncomingCall(call) {
   activeCall = call;
-  navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-    .then(stream => {
-      localStream = stream;
-      document.getElementById('local-video').srcObject = stream;
-      document.getElementById('local-video').style.display = 'block';
-      call.answer(stream);
-      call.on('stream', remoteStream => showRemote(remoteStream));
-      call.on('close', endCall);
-      document.getElementById('call-bar').classList.add('show');
-      document.getElementById('video-idle').style.display = 'none';
-    })
-    .catch(err => toast('Media error: ' + err.message));
-}
+  const answerWithStream = stream => {
+    call.answer(stream);
+    call.on('stream', remote => showRemoteStream(remote));
+    call.on('close', () => endCall(false));
+    showCallUI();
+  };
 
-function showRemote(stream) {
-  const rv = document.getElementById('remote-video');
-  rv.srcObject = stream;
-  rv.style.display = 'block';
+  if (window._pendingAnswerStream) {
+    // Already got media from acceptCall()
+    answerWithStream(window._pendingAnswerStream);
+    window._pendingAnswerStream = null;
+  } else {
+    // Auto-answer with audio (fallback for direct PeerJS call)
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then(stream => { localStream = stream; showLocalVideo(stream); answerWithStream(stream); })
+      .catch(err => toast('Mic error: ' + err.message));
+  }
 }
 
 async function shareScreen() {
   if (!conn || !conn.open) return toast('Connect first');
   try {
     const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
-    document.getElementById('local-video').srcObject = stream;
-    document.getElementById('local-video').style.display = 'block';
+    localStream = stream;
+    showLocalVideo(stream);
     activeCall = peer.call(USERS[peerKey].peerId, stream);
-    activeCall.on('stream', remoteStream => showRemote(remoteStream));
-    stream.getVideoTracks()[0].onended = endCall;
-    document.getElementById('call-bar').classList.add('show');
-    document.getElementById('video-idle').style.display = 'none';
+    activeCall.on('stream', remote => showRemoteStream(remote));
+    stream.getVideoTracks()[0].onended = () => endCall(true);
+    showCallUI();
     toast('Screen sharing 🖥️');
+    showTab('call');
   } catch(err) {
     toast('Screen share error: ' + err.message);
   }
 }
 
-function endCall() {
+function showLocalVideo(stream) {
+  const lv = document.getElementById('local-video');
+  lv.srcObject = stream;
+  lv.style.display = 'block';
+}
+
+function showRemoteStream(stream) {
+  const rv = document.getElementById('remote-video');
+  rv.srcObject = stream;
+  rv.style.display = 'block';
+  document.getElementById('video-idle').style.display = 'none';
+  document.getElementById('call-status').classList.add('show');
+}
+
+function showCallUI() {
+  document.getElementById('call-bar').classList.add('show');
+  document.getElementById('video-idle').style.display = 'none';
+}
+
+function endCall(notify) {
+  if (notify !== false && conn && conn.open) conn.send(JSON.stringify({ type: 'call-end' }));
   if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
   if (activeCall) { activeCall.close(); activeCall = null; }
-  if (conn && conn.open) conn.send(JSON.stringify({ type: 'call-end' }));
+  window._pendingAnswerStream = null;
   ['remote-video','local-video'].forEach(id => {
     const el = document.getElementById(id);
     el.srcObject = null; el.style.display = 'none';
   });
   document.getElementById('call-bar').classList.remove('show');
+  document.getElementById('call-status').classList.remove('show');
   document.getElementById('video-idle').style.display = 'block';
+  micOn = true; camOn = true;
+  document.getElementById('cob-mute').textContent = '🎤';
+  document.getElementById('cob-mute').classList.remove('on');
+  document.getElementById('cob-cam').classList.remove('off');
 }
 
 function toggleMute() {
@@ -545,7 +635,7 @@ function toggleCam() {
   document.getElementById('cob-cam').classList.toggle('off', !camOn);
 }
 
-// ── CHAT ──────────────────────────────────────────────────────
+/* ── CHAT ── */
 function sendChat() {
   const inp = document.getElementById('msg-input');
   const text = inp.value.trim();
@@ -555,7 +645,6 @@ function sendChat() {
   appendMsg(text, 'me', ts);
   inp.value = '';
 }
-
 function appendMsg(text, who, ts) {
   const d = document.createElement('div');
   d.className = 'msg ' + who;
@@ -564,7 +653,7 @@ function appendMsg(text, who, ts) {
   box.appendChild(d); box.scrollTop = box.scrollHeight;
 }
 
-// ── FILE TRANSFER ─────────────────────────────────────────────
+/* ── FILE TRANSFER ── */
 function sendFile(input) {
   const file = input.files[0];
   if (!file) return;
@@ -577,15 +666,11 @@ function sendFile(input) {
     conn.send(e.target.result);
     offset += e.target.result.byteLength;
     if (offset < file.size) reader.readAsArrayBuffer(file.slice(offset, offset + CHUNK));
-    else {
-      conn.send(JSON.stringify({ type:'file-end' }));
-      appendFileMsg(file.name, URL.createObjectURL(file), 'me');
-    }
+    else { conn.send(JSON.stringify({ type:'file-end' })); appendFileMsg(file.name, URL.createObjectURL(file), 'me'); }
   };
   reader.readAsArrayBuffer(file.slice(0, CHUNK));
   input.value = '';
 }
-
 function appendFileMsg(name, url, who) {
   const d = document.createElement('div');
   d.className = 'msg ' + who + ' fmsg';
@@ -594,7 +679,7 @@ function appendFileMsg(name, url, who) {
   box.appendChild(d); box.scrollTop = box.scrollHeight;
 }
 
-// ── HELPERS ───────────────────────────────────────────────────
+/* ── HELPERS ── */
 function setPeerOnline(on) {
   document.getElementById('peer-card').classList.toggle('online', on);
   const dot = document.getElementById('peer-dot');
@@ -602,30 +687,28 @@ function setPeerOnline(on) {
   const lbl = document.getElementById('peer-label');
   lbl.textContent = on ? '🟢 Online' : '⚫ Offline';
   lbl.className = 'peer-label ' + (on ? 'online' : 'offline');
-  document.getElementById('btn-connect').disabled = !on;
+  if (!on) document.getElementById('btn-connect').disabled = true;
+  else if (!conn || !conn.open) document.getElementById('btn-connect').disabled = false;
 }
-
 function setCallEnabled(on) {
   ['btn-voice','btn-video','btn-screen','btn-send'].forEach(id => {
     document.getElementById(id).disabled = !on;
   });
-  document.getElementById('btn-connect').textContent = on ? '✅ Connected' : '🔗 Connect';
-  document.getElementById('btn-connect').disabled = on;
+  const bc = document.getElementById('btn-connect');
+  bc.textContent = on ? '✅ Connected' : '🔗 Connect';
+  bc.disabled = on;
 }
-
 function setConnBadge(ok, label) {
   const b = document.getElementById('conn-badge');
   b.textContent = '● ' + label;
   b.className = 'conn-badge' + (ok ? '' : ' off');
 }
-
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.style.display = 'block';
   clearTimeout(t._t);
   t._t = setTimeout(() => t.style.display = 'none', 3200);
 }
-
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
