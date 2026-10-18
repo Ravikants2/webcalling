@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WebCalling — Private</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#0d0d1a;color:#e0e0e0;min-height:100vh}
+
+/* ── LOGIN ── */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:linear-gradient(145deg,#13132e,#1a1a3a);border:1px solid #2a2a5a;border-radius:20px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.login-logo{text-align:center;margin-bottom:28px}
+.login-logo .icon{font-size:3rem;display:block;margin-bottom:8px}
+.login-logo h1{font-size:1.8rem;background:linear-gradient(135deg,#7c6af7,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+.login-logo p{color:#666;font-size:0.85rem;margin-top:4px}
+.user-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.user-card{background:#0f0f25;border:2px solid #2a2a4a;border-radius:14px;padding:16px 18px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px}
+.user-card:hover{border-color:#7c6af7;background:#14143a;transform:translateY(-1px)}
+.user-card.selected{border-color:#7c6af7;background:#1a1a45;box-shadow:0 0 0 3px rgba(124,106,247,0.2)}
+.avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;flex-shrink:0}
+.av-r{background:linear-gradient(135deg,#7c6af7,#5b4de0)}
+.av-k{background:linear-gradient(135deg,#f76ca8,#e04d8a)}
+.user-info h3{font-size:0.95rem;font-weight:600;color:#e0e0e0}
+.user-info p{font-size:0.78rem;color:#888;margin-top:2px}
+.check{margin-left:auto;color:#7c6af7;font-size:1.2rem;opacity:0}
+.user-card.selected .check{opacity:1}
+.pw-row{position:relative;margin-bottom:20px}
+.pw-row input{width:100%;padding:12px 44px 12px 16px;background:#0f0f25;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:0.95rem;outline:none;transition:border 0.2s}
+.pw-row input:focus{border-color:#7c6af7}
+.pw-row label{display:block;font-size:0.8rem;color:#888;margin-bottom:6px}
+.pw-toggle{position:absolute;right:12px;top:36px;cursor:pointer;color:#666;font-size:1rem}
+.btn-login{width:100%;padding:13px;background:linear-gradient(135deg,#7c6af7,#5b4de0);border:none;border-radius:10px;color:#fff;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity 0.2s}
+.btn-login:hover{opacity:0.9}
+.login-err{color:#f87171;font-size:0.82rem;text-align:center;margin-top:10px;min-height:18px}
+
+/* ── APP ── */
+#app{display:none;height:100vh;flex-direction:column}
+
+/* Top bar */
+.topbar{background:#13132e;border-bottom:1px solid #1e1e40;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-logo{font-size:1.1rem;font-weight:700;background:linear-gradient(135deg,#7c6af7,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.my-badge{display:flex;align-items:center;gap:8px;background:#0f0f25;border:1px solid #2a2a4a;border-radius:30px;padding:5px 12px 5px 6px}
+.my-badge .av-sm{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700}
+.my-badge span{font-size:0.82rem;color:#ccc}
+.btn-logout{background:none;border:1px solid #2a2a4a;color:#888;padding:5px 12px;border-radius:20px;cursor:pointer;font-size:0.8rem;transition:all 0.2s}
+.btn-logout:hover{border-color:#f87171;color:#f87171}
+
+/* Main layout */
+.main{display:flex;flex:1;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:300px;background:#0f0f22;border-right:1px solid #1e1e40;display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-header{padding:16px;border-bottom:1px solid #1e1e40}
+.sidebar-header h3{font-size:0.75rem;text-transform:uppercase;letter-spacing:1.5px;color:#555;margin-bottom:12px}
+
+/* Peer card */
+.peer-card{background:#13132e;border:1px solid #1e1e40;border-radius:14px;padding:14px;transition:all 0.3s}
+.peer-card.online{border-color:#22c55e;box-shadow:0 0 12px rgba(34,197,94,0.15)}
+.peer-top{display:flex;align-items:center;gap:10px}
+.peer-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;position:relative}
+.status-dot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;border-radius:50%;border:2px solid #0f0f22;background:#555}
+.status-dot.online{background:#22c55e}
+.peer-name{font-size:0.9rem;font-weight:600;color:#e0e0e0}
+.peer-email{font-size:0.75rem;color:#666;margin-top:1px}
+.peer-status-text{font-size:0.75rem;margin-top:8px;padding:4px 8px;border-radius:6px;display:inline-block}
+.peer-status-text.online{background:rgba(34,197,94,0.1);color:#22c55e}
+.peer-status-text.offline{background:rgba(100,100,100,0.1);color:#666}
+
+/* Connect button */
+.connect-section{padding:14px;border-bottom:1px solid #1e1e40}
+.btn-connect{width:100%;padding:11px;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:10px;color:#fff;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-connect:disabled{background:#1e1e35;color:#555;cursor:not-allowed}
+.btn-connect:not(:disabled):hover{opacity:0.9;transform:translateY(-1px)}
+
+/* Call actions */
+.call-actions{padding:14px;border-bottom:1px solid #1e1e40;display:flex;gap:8px}
+.btn-action{flex:1;padding:10px 6px;border:none;border-radius:10px;cursor:pointer;font-size:0.78rem;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all 0.2s}
+.btn-action span.ico{font-size:1.3rem}
+.btn-voice{background:#1e1e40;color:#a78bfa}
+.btn-voice:hover{background:#7c6af7;color:#fff}
+.btn-video{background:#1e1e40;color:#60a5fa}
+.btn-video:hover{background:#2563eb;color:#fff}
+.btn-screen{background:#1e1e40;color:#34d399}
+.btn-screen:hover{background:#059669;color:#fff}
+.btn-action:disabled{opacity:0.3;cursor:not-allowed}
+
+/* Chat */
+.chat-section{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:88%;padding:9px 13px;border-radius:14px;font-size:0.88rem;word-break:break-word;line-height:1.4}
+.msg.me{background:linear-gradient(135deg,#7c6af7,#5b4de0);align-self:flex-end;border-bottom-right-radius:3px}
+.msg.them{background:#1a1a35;border:1px solid #2a2a4a;align-self:flex-start;border-bottom-left-radius:3px}
+.msg .meta{font-size:0.68rem;opacity:0.6;margin-top:4px}
+.msg.file-msg{background:#0f2a1a;border:1px solid #166534}
+.msg.file-msg a{color:#4ade80;text-decoration:none}
+.chat-input{padding:12px;border-top:1px solid #1e1e40;display:flex;gap:8px;align-items:center}
+.chat-input input{flex:1;padding:10px 14px;background:#13132e;border:1px solid #2a2a4a;border-radius:10px;color:#fff;font-size:0.9rem;outline:none}
+.chat-input input:focus{border-color:#7c6af7}
+.btn-send{background:#7c6af7;border:none;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:1rem}
+.btn-send:disabled{background:#1e1e35;color:#555;cursor:not-allowed}
+.btn-file{background:#1e1e35;border:none;color:#888;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:1rem}
+.btn-file:hover{color:#a78bfa}
+
+/* Video panel */
+.video-panel{flex:1;background:#080814;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.video-idle{text-align:center;color:#2a2a4a}
+.video-idle .big-icon{font-size:5rem;display:block;margin-bottom:16px;opacity:0.4}
+.video-idle p{font-size:0.9rem;color:#444}
+#remote-video{width:100%;height:100%;object-fit:cover;display:none}
+#local-video{position:absolute;bottom:80px;right:16px;width:180px;height:130px;border-radius:12px;object-fit:cover;border:2px solid #7c6af7;display:none;background:#111}
+.call-overlay{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,0.8));display:none;justify-content:center;gap:12px}
+.call-overlay.active{display:flex}
+.btn-ov{width:48px;height:48px;border-radius:50%;border:none;cursor:pointer;font-size:1.2rem;transition:all 0.2s}
+.btn-ov:hover{transform:scale(1.1)}
+.btn-mute{background:#1e1e40;color:#fff}
+.btn-mute.muted{background:#f59e0b;color:#fff}
+.btn-cam{background:#1e1e40;color:#fff}
+.btn-cam.off{background:#f59e0b}
+.btn-hangup{background:#ef4444;color:#fff}
+
+/* Incoming call modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:#13132e;border:1px solid #2a2a5a;border-radius:20px;padding:32px;text-align:center;width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+.modal .call-icon{font-size:3rem;margin-bottom:12px;animation:ring 1s infinite}
+@keyframes ring{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+.modal h3{font-size:1.1rem;margin-bottom:6px}
+.modal p{color:#888;font-size:0.85rem;margin-bottom:24px}
+.modal-btns{display:flex;gap:12px;justify-content:center}
+.btn-accept{background:#22c55e;color:#fff;border:none;padding:12px 28px;border-radius:10px;cursor:pointer;font-size:0.95rem;font-weight:600}
+.btn-decline{background:#ef4444;color:#fff;border:none;padding:12px 28px;border-radius:10px;cursor:pointer;font-size:0.95rem;font-weight:600}
+
+/* Toast */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#1e1e40;border:1px solid #7c6af7;color:#a78bfa;padding:8px 20px;border-radius:20px;font-size:0.82rem;display:none;z-index:300;white-space:nowrap}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:#2a2a4a;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="icon">📡</span>
+      <h1>WebCalling</h1>
+      <p>Private & Secure Communication</p>
+    </div>
+
+    <div class="user-cards">
+      <div class="user-card" id="card-ravi" onclick="selectUser('ravi')">
+        <div class="avatar av-r">RS</div>
+        <div class="user-info">
+          <h3>RaviKant Singh</h3>
+          <p>ravikant.s2@gmail.com</p>
+        </div>
+        <span class="check">✓</span>
+      </div>
+      <div class="user-card" id="card-rekha" onclick="selectUser('rekha')">
+        <div class="avatar av-k">RK</div>
+        <div class="user-info">
+          <h3>Rekha Kumari</h3>
+          <p>rekhasingh@gmail.com</p>
+        </div>
+        <span class="check">✓</span>
+      </div>
+    </div>
+
+    <div class="pw-row">
+      <label>Password</label>
+      <input type="password" id="pw-input" placeholder="Enter password" />
+      <span class="pw-toggle" onclick="togglePw()">👁</span>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Sign In</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span style="font-size:1.4rem">📡</span>
+      <span class="topbar-logo">WebCalling</span>
+    </div>
+    <div class="topbar-right">
+      <div class="my-badge">
+        <div class="av-sm" id="my-av" style="background:linear-gradient(135deg,#7c6af7,#5b4de0)"></div>
+        <span id="my-name-badge"></span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h3>Contact</h3>
+        <div class="peer-card" id="peer-card">
+          <div class="peer-top">
+            <div class="peer-avatar" id="peer-av">
+              <div class="status-dot" id="peer-dot"></div>
+            </div>
+            <div>
+              <div class="peer-name" id="peer-name">—</div>
+              <div class="peer-email" id="peer-email"></div>
+            </div>
+          </div>
+          <span class="peer-status-text offline" id="peer-status-text">Offline</span>
+        </div>
+      </div>
+
+      <div class="connect-section">
+        <button class="btn-connect" id="btn-connect" disabled onclick="initConnection()">
+          <span>🔗</span> Connect
+        </button>
+      </div>
+
+      <div class="call-actions">
+        <button class="btn-action btn-voice" id="btn-voice" disabled onclick="startCall('audio')">
+          <span class="ico">📞</span>Voice
+        </button>
+        <button class="btn-action btn-video" id="btn-video" disabled onclick="startCall('video')">
+          <span class="ico">📹</span>Video
+        </button>
+        <button class="btn-action btn-screen" id="btn-screen" disabled onclick="shareScreen()">
+          <span class="ico">🖥️</span>Screen
+        </button>
+      </div>
+
+      <div class="chat-section">
+        <div class="chat-messages" id="messages"></div>
+        <div class="chat-input">
+          <input type="file" id="file-input" style="display:none" onchange="sendFile(this)"/>
+          <button class="btn-file" onclick="document.getElementById('file-input').click()" title="Send file">📎</button>
+          <input id="msg-input" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()"/>
+          <button class="btn-send" id="btn-send" disabled onclick="sendChat()">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Panel -->
+    <div class="video-panel">
+      <div class="video-idle" id="video-idle">
+        <span class="big-icon">📡</span>
+        <p>Connect to start a call or chat</p>
+      </div>
+      <video id="remote-video" autoplay playsinline></video>
+      <video id="local-video" autoplay playsinline muted></video>
+      <div class="call-overlay" id="call-overlay">
+        <button class="btn-ov btn-mute" id="btn-mute" onclick="toggleMute()" title="Mute">🎤</button>
+        <button class="btn-ov btn-cam" id="btn-cam" onclick="toggleCam()" title="Camera">📷</button>
+        <button class="btn-ov btn-hangup" onclick="endCall()" title="End">📵</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Incoming Call Modal -->
+<div class="modal-overlay" id="call-modal">
+  <div class="modal">
+    <div class="call-icon" id="modal-icon">📞</div>
+    <h3 id="modal-title">Incoming Call</h3>
+    <p id="modal-desc">is calling you...</p>
+    <div class="modal-btns">
+      <button class="btn-accept" onclick="acceptCall()">Accept</button>
+      <button class="btn-decline" onclick="rejectCall()">Decline</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+// ── CONFIG ────────────────────────────────────────────────────
+// Replace with your Railway/Render server URL after deploying server.js
+const SIGNALING_SERVER = 'https://webcalling-server.up.railway.app';
+
+const USERS = {
+  ravi:  { name: 'RaviKant Singh', email: 'ravikant.s2@gmail.com',  initials: 'RS', color: 'linear-gradient(135deg,#7c6af7,#5b4de0)' },
+  rekha: { name: 'Rekha Kumari',   email: 'rekhasingh@gmail.com',   initials: 'RK', color: 'linear-gradient(135deg,#f76ca8,#e04d8a)' }
+};
+const PASSWORD = 'Pass@123';
+const ICE = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] };
+
+// ── STATE ─────────────────────────────────────────────────────
+let me = null, socket = null, pc = null;
+let peerId = null, peerKey = null;
+let localStream = null, dataChannel = null;
+let pendingCall = null;
+let micOn = true, camOn = true, connected = false;
+
+// ── LOGIN ─────────────────────────────────────────────────────
+let selectedUser = null;
+
+function selectUser(key) {
+  selectedUser = key;
+  document.querySelectorAll('.user-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + key).classList.add('selected');
+  document.getElementById('login-err').textContent = '';
+}
+
+function togglePw() {
+  const inp = document.getElementById('pw-input');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+function doLogin() {
+  if (!selectedUser) { setErr('Please select a user.'); return; }
+  const pw = document.getElementById('pw-input').value;
+  if (pw !== PASSWORD) { setErr('Incorrect password.'); return; }
+  me = { key: selectedUser, ...USERS[selectedUser] };
+  peerKey = selectedUser === 'ravi' ? 'rekha' : 'ravi';
+  renderApp();
+  initSocket();
+}
+
+function setErr(msg) { document.getElementById('login-err').textContent = msg; }
+
+function doLogout() {
+  if (socket) socket.disconnect();
+  me = null; socket = null; pc = null; peerId = null;
+  connected = false; localStream = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('login-err').textContent = '';
+  document.querySelectorAll('.user-card').forEach(c => c.classList.remove('selected'));
+  selectedUser = null;
+}
+
+function renderApp() {
+  const peer = USERS[peerKey];
+  // My badge
+  document.getElementById('my-av').textContent = me.initials;
+  document.getElementById('my-av').style.background = me.color;
+  document.getElementById('my-name-badge').textContent = me.name;
+  // Peer card
+  const pav = document.getElementById('peer-av');
+  pav.style.background = peer.color;
+  pav.innerHTML = peer.initials + '<div class="status-dot" id="peer-dot"></div>';
+  document.getElementById('peer-name').textContent = peer.name;
+  document.getElementById('peer-email').textContent = peer.email;
+  setPeerOnline(false);
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+}
+
+// ── SOCKET ────────────────────────────────────────────────────
+function initSocket() {
+  socket = io(SIGNALING_SERVER, { transports: ['websocket', 'polling'] });
+
+  socket.on('connect', () => {
+    socket.emit('user-login', { name: me.name, email: me.email });
+  });
+
+  socket.on('room-state', ({ myId, peers }) => {
+    if (peers.length > 0) {
+      peerId = peers[0].id;
+      setPeerOnline(true);
+      toast(USERS[peerKey].name + ' is online 🟢');
+    }
+  });
+
+  socket.on('peer-online', ({ id }) => {
+    peerId = id;
+    setPeerOnline(true);
+    toast(USERS[peerKey].name + ' is online 🟢');
+  });
+
+  socket.on('peer-offline', () => {
+    peerId = null;
+    setPeerOnline(false);
+    setConnected(false);
+    endCall();
+    toast(USERS[peerKey].name + ' went offline');
+  });
+
+  socket.on('offer', async ({ from, offer }) => {
+    if (!pc) await createPC(false);
+    await pc.setRemoteDescription(offer);
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    socket.emit('answer', { to: from, answer });
+  });
+
+  socket.on('answer', async ({ answer }) => {
+    await pc.setRemoteDescription(answer);
+  });
+
+  socket.on('ice-candidate', async ({ candidate }) => {
+    if (pc && candidate) await pc.addIceCandidate(candidate).catch(() => {});
+  });
+
+  socket.on('call-request', ({ from, name, type }) => {
+    pendingCall = { from, type };
+    document.getElementById('modal-icon').textContent = type === 'video' ? '📹' : '📞';
+    document.getElementById('modal-title').textContent = 'Incoming ' + (type === 'video' ? 'Video' : 'Voice') + ' Call';
+    document.getElementById('modal-desc').textContent = name + ' is calling you...';
+    document.getElementById('call-modal').classList.add('show');
+  });
+
+  socket.on('call-accept', async () => {
+    await startMedia(pendingCallType);
+    toast('Call connected ✅');
+  });
+
+  socket.on('call-reject', () => {
+    pendingCallType = null;
+    toast('Call declined ❌');
+  });
+
+  socket.on('call-end', () => {
+    endCall();
+    toast('Call ended');
+  });
+
+  socket.on('chat-message', ({ name, message, timestamp }) => {
+    appendMsg(message, 'them', name, timestamp);
+  });
+}
+
+// ── CONNECTION ────────────────────────────────────────────────
+async function initConnection() {
+  if (!peerId) return toast('Peer is offline');
+  await createPC(true);
+  setConnected(true);
+  toast('Connected to ' + USERS[peerKey].name + ' ✅');
+}
+
+async function createPC(isInitiator) {
+  if (pc) { pc.close(); pc = null; }
+  pc = new RTCPeerConnection(ICE);
+
+  pc.onicecandidate = e => {
+    if (e.candidate && peerId) socket.emit('ice-candidate', { to: peerId, candidate: e.candidate });
+  };
+
+  pc.ontrack = e => {
+    const rv = document.getElementById('remote-video');
+    rv.srcObject = e.streams[0];
+    rv.style.display = 'block';
+    document.getElementById('video-idle').style.display = 'none';
+    document.getElementById('call-overlay').classList.add('active');
+  };
+
+  if (isInitiator) {
+    dataChannel = pc.createDataChannel('files', { ordered: true });
+    setupDC(dataChannel);
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    socket.emit('offer', { to: peerId, offer });
+  } else {
+    pc.ondatachannel = e => { dataChannel = e.channel; setupDC(dataChannel); };
+  }
+}
+
+function setConnected(val) {
+  connected = val;
+  ['btn-voice', 'btn-video', 'btn-screen', 'btn-send'].forEach(id => {
+    document.getElementById(id).disabled = !val;
+  });
+  document.getElementById('btn-connect').disabled = val || !peerId;
+  document.getElementById('btn-connect').textContent = val ? '✅ Connected' : '🔗 Connect';
+}
+
+// ── CALLS ─────────────────────────────────────────────────────
+let pendingCallType = null;
+
+async function startCall(type) {
+  if (!connected || !peerId) return toast('Connect first');
+  pendingCallType = type;
+  socket.emit('call-request', { to: peerId, type });
+  toast('Calling ' + USERS[peerKey].name + '...');
+  await startMedia(type);
+}
+
+async function startMedia(type) {
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: type === 'video'
+    });
+    const lv = document.getElementById('local-video');
+    lv.srcObject = localStream;
+    lv.style.display = 'block';
+    localStream.getTracks().forEach(t => pc && pc.addTrack(t, localStream));
+    document.getElementById('call-overlay').classList.add('active');
+  } catch (err) {
+    toast('Media error: ' + err.message);
+  }
+}
+
+async function shareScreen() {
+  if (!connected || !peerId) return toast('Connect first');
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+    const lv = document.getElementById('local-video');
+    lv.srcObject = stream;
+    lv.style.display = 'block';
+    stream.getTracks().forEach(t => pc && pc.addTrack(t, stream));
+    document.getElementById('call-overlay').classList.add('active');
+    stream.getVideoTracks()[0].onended = endCall;
+    toast('Screen sharing started 🖥️');
+  } catch (err) {
+    toast('Screen share error: ' + err.message);
+  }
+}
+
+function acceptCall() {
+  document.getElementById('call-modal').classList.remove('show');
+  socket.emit('call-accept', { to: pendingCall.from });
+  startMedia(pendingCall.type);
+  pendingCall = null;
+}
+
+function rejectCall() {
+  document.getElementById('call-modal').classList.remove('show');
+  socket.emit('call-reject', { to: pendingCall.from });
+  pendingCall = null;
+}
+
+function endCall() {
+  if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+  if (peerId) socket.emit('call-end', { to: peerId });
+  ['remote-video', 'local-video'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.srcObject = null; el.style.display = 'none'; }
+  });
+  document.getElementById('call-overlay').classList.remove('active');
+  document.getElementById('video-idle').style.display = 'block';
+}
+
+function toggleMute() {
+  if (!localStream) return;
+  micOn = !micOn;
+  localStream.getAudioTracks().forEach(t => t.enabled = micOn);
+  const btn = document.getElementById('btn-mute');
+  btn.textContent = micOn ? '🎤' : '🔇';
+  btn.classList.toggle('muted', !micOn);
+}
+
+function toggleCam() {
+  if (!localStream) return;
+  camOn = !camOn;
+  localStream.getVideoTracks().forEach(t => t.enabled = camOn);
+  const btn = document.getElementById('btn-cam');
+  btn.classList.toggle('off', !camOn);
+}
+
+// ── CHAT ──────────────────────────────────────────────────────
+function sendChat() {
+  const inp = document.getElementById('msg-input');
+  const msg = inp.value.trim();
+  if (!msg || !peerId) return;
+  const ts = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  socket.emit('chat-message', { to: peerId, message: msg, timestamp: ts });
+  appendMsg(msg, 'me', me.name, ts);
+  inp.value = '';
+}
+
+function appendMsg(text, who, name, ts) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + who;
+  div.innerHTML = esc(text) + '<div class="meta">' + (who === 'them' ? name + ' · ' : '') + ts + '</div>';
+  const box = document.getElementById('messages');
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+// ── FILE TRANSFER ─────────────────────────────────────────────
+function setupDC(dc) {
+  let meta = null, chunks = [];
+  dc.onmessage = e => {
+    if (typeof e.data === 'string') {
+      const d = JSON.parse(e.data);
+      if (d.type === 'file-start') { meta = d; chunks = []; }
+      else if (d.type === 'file-end') {
+        const blob = new Blob(chunks, { type: meta.mime });
+        appendFileMsg(meta.name, URL.createObjectURL(blob), 'them');
+        meta = null; chunks = [];
+      }
+    } else { chunks.push(e.data); }
+  };
+}
+
+function sendFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!dataChannel || dataChannel.readyState !== 'open') { toast('Connect first to send files'); return; }
+  const CHUNK = 16384;
+  dataChannel.send(JSON.stringify({ type: 'file-start', name: file.name, mime: file.type }));
+  let offset = 0;
+  const reader = new FileReader();
+  reader.onload = e => {
+    dataChannel.send(e.target.result);
+    offset += e.target.result.byteLength;
+    if (offset < file.size) reader.readAsArrayBuffer(file.slice(offset, offset + CHUNK));
+    else {
+      dataChannel.send(JSON.stringify({ type: 'file-end' }));
+      appendFileMsg(file.name, URL.createObjectURL(file), 'me');
+    }
+  };
+  reader.readAsArrayBuffer(file.slice(0, CHUNK));
+  input.value = '';
+}
+
+function appendFileMsg(name, url, who) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + who + ' file-msg';
+  div.innerHTML = '📎 <a href="' + url + '" download="' + esc(name) + '">' + esc(name) + '</a><div class="meta">File ' + (who === 'me' ? 'sent' : 'received') + '</div>';
+  const box = document.getElementById('messages');
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function setPeerOnline(online) {
+  const card = document.getElementById('peer-card');
+  const dot = document.getElementById('peer-dot');
+  const txt = document.getElementById('peer-status-text');
+  card.classList.toggle('online', online);
+  if (dot) { dot.classList.toggle('online', online); }
+  txt.textContent = online ? '🟢 Online' : '⚫ Offline';
+  txt.className = 'peer-status-text ' + (online ? 'online' : 'offline');
+  document.getElementById('btn-connect').disabled = !online || connected;
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.style.display = 'none', 3000);
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
